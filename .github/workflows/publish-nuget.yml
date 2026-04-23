@@ -16,19 +16,19 @@ jobs:
         with:
           fetch-depth: 0  # Required for GitVersion to traverse full history
 
-      - name: Install GitVersion
-        uses: gittools/actions/gitversion/setup@v3
-        with:
-          versionSpec: '6.x'
-
-      - name: Determine version
-        id: gitversion
-        uses: gittools/actions/gitversion/execute@v3
-
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.x'
+
+      - name: Install GitVersion
+        run: dotnet tool install --global GitVersion.Tool
+
+      - name: Determine version
+        id: gitversion
+        run: |
+          VERSION=$(dotnet-gitversion /output json /showvariable NuGetVersionV2)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Restore dependencies
         run: dotnet restore
@@ -41,7 +41,7 @@ jobs:
           dotnet pack
           --configuration Release
           --no-build
-          -p:PackageVersion=${{ steps.gitversion.outputs.nuGetVersionV2 }}
+          -p:PackageVersion=${{ steps.gitversion.outputs.version }}
           --output ./nupkgs
 
       - name: Push to NuGet.org
