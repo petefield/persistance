@@ -9,10 +9,14 @@ A reusable .NET class library that provides a clean abstraction over MongoDB for
 
 ## Installation
 
-Add a NuGet package reference or a direct project reference:
+```
+dotnet add package pefi.persistence
+```
+
+or add a package reference directly:
 
 ```xml
-<ProjectReference Include="../pefi.persistence/pefi.persistence.csproj" />
+<PackageReference Include="pefi.persistence" Version="*" />
 ```
 
 ## Usage
