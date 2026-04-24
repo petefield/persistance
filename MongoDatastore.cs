@@ -31,4 +31,12 @@ public class MongoDatastore(IMongoClient client) : IDataStore
         await GetCollection<T>(database, collection)
             .DeleteManyAsync(predicate);
     }
+
+    public async Task<T?> Update<T>(string database, string collection, Expression<Func<T, bool>> predicate, T item)
+    {
+        var options = new FindOneAndReplaceOptions<T> { ReturnDocument = ReturnDocument.After };
+
+        return await GetCollection<T>(database, collection)
+            .FindOneAndReplaceAsync(predicate, item, options);
+    }
 }

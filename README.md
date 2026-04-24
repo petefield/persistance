@@ -52,12 +52,15 @@ public class MyService(IDataStore store)
 
     public Task RemoveAsync(string id) =>
         store.Delete<MyDoc>("mydb", "mydocs", d => d.Id == id);
+
+    public Task<MyDoc?> UpdateAsync(string id, MyDoc updated) =>
+        store.Update<MyDoc>("mydb", "mydocs", d => d.Id == id, updated);
 }
 ```
 
 ## API
 
-`IDataStore` exposes four operations:
+`IDataStore` exposes five operations:
 
 | Method | Description |
 |---|---|
@@ -65,6 +68,7 @@ public class MyService(IDataStore store)
 | `Get<T>(database, collection)` | Returns all documents in a collection |
 | `Get<T>(database, collection, predicate)` | Returns documents matching a LINQ predicate |
 | `Delete<T>(database, collection, predicate)` | Deletes documents matching a LINQ predicate |
+| `Update<T>(database, collection, predicate, item)` | Replaces the first document matching a LINQ predicate and returns the updated document, or `null` if no match was found |
 
 All methods are async.
 
